@@ -57,7 +57,7 @@ void SubwayMapManagement::initStation()
 				station[--index]->Setpre(nullptr);			// null   <- 소요산
 				index++;									// 인덱스 동두천으로
 			}
-			if (station[index]->GetSubwayStationName() == "인천")	// 종착역
+			else if (station[index]->GetSubwayStationName() == "인천")	// 종착역
 			{
 				station[index]->Setnext(nullptr);			// 인천 -> null
 				station[index]->Setpre(station[--index]);	// 동인천 <- 인천
@@ -72,7 +72,10 @@ void SubwayMapManagement::initStation()
 		}
 		else if (station[index]->GetSubwayLine() == "line1_Sinchang")
 		{
-
+			if (station[index]->GetSubwayStationName() == "구로")
+			{
+				station[index]->Setnext(station[++index]);	// 구로 -> 가산디지털단지
+			}
 		}
 	}
 }

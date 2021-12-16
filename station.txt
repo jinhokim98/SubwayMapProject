@@ -60,6 +60,7 @@ line1	제물포	2
 line1	도원	2
 line1	동인천	2
 line1	인천	3
+line1_Sinchang	구로	0
 line1_Sinchang	가산디지털단지	4
 line1_Sinchang	독산	3
 line1_Sinchang	금천구청	2
@@ -95,7 +96,6 @@ line1_Sinchang	탕정	3
 line1_Sinchang	배방	3
 line1_Sinchang	온양온천	5
 line1_Sinchang	신창	4
-line2	시청	0
 line2	을지로입구	2
 line2	을지로3가	2
 line2	을지로4가	1
