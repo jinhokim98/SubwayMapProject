@@ -5,22 +5,24 @@ using namespace std;
 
 /*
  생성자 : 매개변수값들을 변수에 저장.
+		  거리행렬을 전부 9999로 저장 (다익스트라 알고리즘의 초기화 조건)
 */
-SubwayStation::SubwayStation(string linenum, string stationName, int distance)
+SubwayStation::SubwayStation(string stationName)
 {
-	this->linenum = linenum;
+	
 	this->stationName = stationName;
-	this->distance = distance;
+
+	int i, j = 0;
+
+	for (i = 0; i < STATION_NUMBER; i++)
+	{
+		for (j = 0; j < STATION_NUMBER; j++)
+		{
+			distance_adj[i][j] = INF;
+		}
+	}
 }
 
-/*
- 함수 이름 : GetSubwayLine
- 함수 기능 : 호선번호 반환
-*/
-string SubwayStation::GetSubwayLine()
-{
-	return linenum;
-}
 
 /*
  함수 이름 : GetSubwayStationName
@@ -32,46 +34,22 @@ string SubwayStation::GetSubwayStationName()
 }
 
 /*
- 함수 이름 : Getdistance
- 함수 기능 : 역 간 거리 반환
+ 함수 이름 : SetMatrix
+ 함수 기능 : 역 간 거리를 행렬에 기록
 */
-int SubwayStation::Getdistance()
+void SubwayStation::SetMatrix(int source, int dest, int distance)
 {
-	return distance;
+	distance_adj[source][dest] = distance;
+	distance_adj[dest][source] = distance;
 }
 
-/*
- 함수 이름 : Setnext
- 함수 기능 : 다음 역 설정
-*/
-void SubwayStation::Setnext(SubwayStation* next)
-{
-	if (next == nullptr)
-	{
-		this->next = nullptr;
-	}
-
-	this->next = next;
-}
 
 /*
- 함수 이름 : Setpre
- 함수 기능 : 전 역 설정
+ 함수 이름 : SetMatrix (단방향)
+ 함수 기능 : 단방향일 때 역 간 거리를 행렬에 기록
 */
-void SubwayStation::Setpre(SubwayStation* pre)
+void SubwayStation::SetMatrix(int source, int dest, int distance, bool Is_one_way)
 {
-	if (pre == nullptr)
-	{
-		this->pre = nullptr;
-	}
-
-	this->pre = pre;
-}
-
-/*
- 소멸자 : 파일을 닫는다.
-*/
-SubwayStation::~SubwayStation()
-{
-	
+	if (Is_one_way == true)
+		distance_adj[source][dest] = distance;
 }

@@ -2,6 +2,8 @@
 #include <iostream>
 
 #define STATION_NUMBER 625
+#define INF 9999
+
 
 /*
  클래스 이름 : SubwayStation
@@ -10,21 +12,15 @@
 class SubwayStation
 {
 private:
-	std::string linenum;			// 호선
-	std::string stationName;		// 역 이름
-	int distance;					// 거리 
-	SubwayStation* next = nullptr;	// 다음 역(초기값 null)
-	SubwayStation* pre = nullptr;	// 전 역  (초기값 null)
+	std::string stationName;
+	int distance_adj[STATION_NUMBER][STATION_NUMBER];	// 지하철역 인접행렬
+
 
 public:
-	SubwayStation(std::string linenum, std::string stationName, int distance);
-	std::string GetSubwayLine();
+	SubwayStation(std::string stationName);
 	std::string GetSubwayStationName();
-	int Getdistance();
-	void Setnext(SubwayStation* next);
-	void Setpre(SubwayStation* pre);
-
-	~SubwayStation();
+	void SetMatrix(int source, int dest, int distance);
+	void SetMatrix(int source, int dest, int distance, bool Is_one_way);
 
 };
 
