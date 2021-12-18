@@ -25,6 +25,9 @@ public:
 	std::string Getsource();		
 	std::string Getdest();	
 
+	SubwayStation* Getnext();
+	SubwayStation* Getpre();
 	void Setnext(SubwayStation* next);
 	void Setpre(SubwayStation* pre);
+	
 };

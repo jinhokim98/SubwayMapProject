@@ -14,6 +14,8 @@ private:
 	int transfer;				// È¯½ÂÈ½¼ö
 	int distance_adj[STATION_NUMBER][STATION_NUMBER];	// ÁöÇÏÃ¶¿ª ÀÎÁ¢Çà·Ä
 
+	void print_Map();
+
 public:
 	SubwayMapManagement();
 	void Shortest_route(std::string start, std::string goal);

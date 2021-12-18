@@ -21,6 +21,24 @@ string SubwayStation::GetSubwayStationName()
 }
 
 /*
+ 함수 이름 : Getnext
+ 함수 기능 : 다음 엣지 반환
+*/
+Edge* SubwayStation::Getnext()
+{
+	return next;
+}
+
+/*
+ 함수 이름 : Getpre
+ 함수 기능 : 전 엣지 반환
+*/
+Edge* SubwayStation::Getpre()
+{
+	return pre;
+}
+
+/*
  함수 이름 : Setnext
  함수 기능 : 다음 역의 엣지 설정
 */

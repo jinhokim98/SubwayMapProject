@@ -19,18 +19,19 @@ private:
 	void initStation();
 	void initEdge();
 	void makeLine();
-
+	
 	void link_first_station(int index);
 	void link_else_station(int index);
 	void link_last_station(int index);
-	void link_line2_circle(int index);
-	int SearchIndex(std::string name);
+	void link_line6_one_way_problem(int index, std::string name);
 
 public:
 	MakeGraph();
 	void init();
+	int SearchIndex(std::string name);
 
-	void print_Map();
+
+
 	
 	~MakeGraph();
 };

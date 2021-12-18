@@ -24,6 +24,18 @@ SubwayMapManagement::SubwayMapManagement()
 	}
 }
 
+void SubwayMapManagement::print_Map()
+{
+	SubwayStation* p = nullptr;
+	Edge* q = nullptr;
+
+	int start_index = metro->SearchIndex("소요산");
+
+	while (!p)
+	{
+		
+	}
+}
 /*
  소멸자 : 동적생성한 metro 객체를 지운다.
 */

@@ -20,6 +20,8 @@ public:
 	SubwayStation(std::string stationName);
 	std::string GetSubwayStationName();
 
+	Edge* Getnext();
+	Edge* Getpre();
 	void Setnext(Edge* next);
 	void Setpre(Edge* pre);
 

@@ -113,15 +113,12 @@ void MakeGraph::makeLine()
 			index++;
 		}
 
-		else if (edge[index]->GetSubwayLine() == "line2") // 순환선 처리 필요
+		else if (edge[index]->GetSubwayLine() == "line2") // 순환선 문제 없음
 		{
 			if (edge[index]->Getsource() == "시청")
 				link_first_station(index);
 			else if (edge[index]->Getdest() == "시청")
-			{
 				link_last_station(index);				 
-				link_line2_circle(index);				  // 순환선 문제 처리
-			}
 			else
 				link_else_station(index);
 			
@@ -207,18 +204,16 @@ void MakeGraph::makeLine()
 				link_first_station(index);
 				index++;
 			}
-			else if (edge[index]->Getsource() == "역촌")	// 단방향 구간 처리(last 처리)
+			else if (edge[index]->Getsource() == "응암")	// 단방향 구간 처리
 			{
+				link_line6_one_way_problem(index, "응암");
+				index++;									// 응암에서 역촌으로 옮김
+
 				for (int i = 0; i < 5;i++)					// 역촌 -> 불광 -> 독바위 -> 연신내 -> 구산 -> 응암
 				{
-					link_first_station(index);
+					link_line6_one_way_problem(index, "not응암");
 					index++;
 				}
-			}
-			else
-			{
-				link_else_station(index);
-				index++;
 			}
 		}
 
@@ -478,12 +473,13 @@ void MakeGraph::link_last_station(int index)
 	station[next_station_index]->Setpre(edge[index]);				// line1, 3분 <- 인천 (-> null이지만 기본 값이 null이므로 다음은 설정하지 않는다.)
 }
 
-
 /*
- 함수 이름 : link_line2_circle
- 함수 기능 : 2호선 순환선 문제 해결
+ 함수 이름 : link_line6_one_way_problem
+ 함수 기능 : 6호선의 단방향 문제를 해결해준다.
+			 응암이면 전 역인 새절과 이어주어야한다.
+			 응암이 아니면 전을 이어주지 않아야 한다.
 */
-void MakeGraph::link_line2_circle(int index)
+void MakeGraph::link_line6_one_way_problem(int index, string name)
 {
 	int preidx = index;
 	preidx--;
@@ -491,11 +487,15 @@ void MakeGraph::link_line2_circle(int index)
 	int now_station_index = SearchIndex(edge[index]->Getsource());	// 현재 역 인덱스 저장
 	int next_station_index = SearchIndex(edge[index]->Getdest());	// 다음 역 인덱스 저장
 
-	edge[index]->Setpre(station[now_station_index]);				// 충정로	  <- line2, 3분
-	edge[index]->Setnext(station[next_station_index]);				// line2, 3분 -> 시청
+	edge[index]->Setpre(nullptr);									// 전 역 null
+	edge[index]->Setnext(station[next_station_index]);				// 다음 역과 이어줌
 
-	station[now_station_index]->Setpre(edge[preidx]);				// line2, 3분 <- 시청
-	station[next_station_index]->Setnext(edge[index]);				// 시청  	  -> line2, 2분(을지로입구)
+	if(name == "응암")
+		station[now_station_index]->Setpre(edge[preidx]);			// line6, 2분 <- 응암
+	else
+		station[now_station_index]->Setpre(nullptr);				// null       <- 역촌
+
+	station[now_station_index]->Setnext(edge[index]);				// 응암	  -> line6, 1분
 }
 
 
@@ -529,17 +529,8 @@ void MakeGraph::init()
 	makeLine();
 }
 
-void print_map()
-{
-	SubwayStation* p = nullptr;
 
-	int i = 0;
 
-	while(!p)
-	{
-		
-	}
-}
 
 /*
  소멸자 : 파일 닫고 동적생성한 객체 배열들을 해제한다.
@@ -555,36 +546,3 @@ MakeGraph::~MakeGraph()
 	for (int i = 0;i < EDGE_NUMBER;i++)
 		delete edge[i];
 }
-
-
-
-
-
-
-
-
-
-
-/*
-void MakeGraph::link_first_station(int index)
-{
-	edge[index]->Setpre(nullptr);											// null   <- 소요산
-	edge[index]->Setnext(station[SearchIndex(edge[index]->Getdest())]);		// 소요산 -> 동두천
-
-	int now_index = SearchIndex(edge[index]->Getsource());						// SubwayStation의 출발역 인덱스를 구한다.
-	int next_index = SearchIndex(edge[index]->Getdest());						// SubwayStation의 도착역 인덱스를 구한다.
-
-	//station[now_index]->SetMatrix(now_index, next_index, edge[index]->Getdistance());	// 소요산 <-> 동두천은 4분을 기록한다.
-}
-
-void MakeGraph::link_else_station(int index)
-{
-	edge[index]->Setpre(station[SearchIndex(edge[--index]->Getsource())]);	// 전 역과 이어줌
-	edge[++index]->Setnext(station[SearchIndex(edge[index]->Getdest())]);	// 다음 역과 이어줌
-
-	int now_index = SearchIndex(edge[index]->Getsource());						// SubwayStation의 출발역 인덱스를 구한다.
-	int next_index = SearchIndex(edge[index]->Getdest());						// SubwayStation의 도착역 인덱스를 구한다.
-
-	station[now_index]->SetMatrix(now_index, next_index, edge[index]->Getdistance());	// 동두천 <-> 보산은 3분을 기록한다.
-}
-*/
