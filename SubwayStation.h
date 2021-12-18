@@ -1,9 +1,8 @@
 #pragma once
 #include <iostream>
+#include "Edge.h"
 
 #define STATION_NUMBER 625
-#define INF 9999
-
 
 /*
  클래스 이름 : SubwayStation
@@ -13,16 +12,16 @@ class SubwayStation
 {
 private:
 	std::string stationName;
-	int distance_adj[STATION_NUMBER][STATION_NUMBER];	// 지하철역 인접행렬
-
+	
+	Edge* next = nullptr;				// 다음 엣지를 가리키는 포인터
+	Edge* pre = nullptr;				// 전 엣지를 가리키는 포인터
 
 public:
 	SubwayStation(std::string stationName);
 	std::string GetSubwayStationName();
-	void SetMatrix(int source, int dest, int distance);
-	void SetMatrix(int source, int dest, int distance, bool Is_one_way);
 
-	SubwayStation* Getnext();
+	void Setnext(Edge* next);
+	void Setpre(Edge* pre);
 
 };
 

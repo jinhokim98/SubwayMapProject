@@ -93,6 +93,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "소요산")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "인천")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -103,6 +105,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "구로")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "신창")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -111,15 +115,12 @@ void MakeGraph::makeLine()
 
 		else if (edge[index]->GetSubwayLine() == "line2") // 순환선 처리 필요
 		{
-			if (edge[index]->Getsource() == "시청") // 순환선 처리
+			if (edge[index]->Getsource() == "시청")
+				link_first_station(index);
+			else if (edge[index]->Getdest() == "시청")
 			{
-				edge[index]->Setpre(station[SearchIndex("충정로")]);					// 충정로 <- 시청
-				edge[index]->Setnext(station[SearchIndex(edge[index]->Getdest())]);		// 시청   -> 을지로입구
-
-				int now_index = SearchIndex(edge[index]->Getsource());						// SubwayStation의 출발역 인덱스를 구한다.
-				int next_index = SearchIndex(edge[index]->Getdest());						// SubwayStation의 도착역 인덱스를 구한다.
-
-				station[now_index]->SetMatrix(now_index, next_index, edge[index]->Getdistance());	// 시청 -> 을지로입구는 2분을 기록한다.
+				link_last_station(index);				 
+				link_line2_circle(index);				  // 순환선 문제 처리
 			}
 			else
 				link_else_station(index);
@@ -131,6 +132,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "성수")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "신설동")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -141,6 +144,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "신도림")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "까치산")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -151,6 +156,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "대화")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "오금")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -161,6 +168,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "당고개")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "오이도")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -171,6 +180,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "방화")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "하남검단산")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -181,6 +192,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "강동")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "마천")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -194,17 +207,12 @@ void MakeGraph::makeLine()
 				link_first_station(index);
 				index++;
 			}
-			else if (edge[index]->Getsource() == "역촌")	// 단방향 구간 처리
+			else if (edge[index]->Getsource() == "역촌")	// 단방향 구간 처리(last 처리)
 			{
 				for (int i = 0; i < 5;i++)					// 역촌 -> 불광 -> 독바위 -> 연신내 -> 구산 -> 응암
 				{
-					edge[index]->Setpre(nullptr);											// null   <- 역촌
-					edge[index]->Setnext(station[SearchIndex(edge[index]->Getdest())]);		// 역촌 -> 불광
-
-					int now_index = SearchIndex(edge[index]->Getsource());						// SubwayStation의 출발역 인덱스를 구한다.
-					int next_index = SearchIndex(edge[index]->Getdest());						// SubwayStation의 도착역 인덱스를 구한다.
-
-					station[now_index]->SetMatrix(now_index, next_index, edge[index]->Getdistance(), true);	// 역촌 -> 불광은 4분을 기록한다.
+					link_first_station(index);
+					index++;
 				}
 			}
 			else
@@ -218,6 +226,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "석남")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "장암")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -228,6 +238,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "암사")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "모란")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -238,6 +250,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "개화")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "중앙보훈병원")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -248,6 +262,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "계양")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "송도달빛축제공원")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -258,6 +274,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "검단오류")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "운연")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -268,6 +286,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "청량리")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "인천")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -278,6 +298,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "강남")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "광교")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -288,6 +310,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "문산")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "지평")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -298,6 +322,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "서울역")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "인천공항2터미널")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -308,6 +334,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "청량리")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "춘천")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -318,6 +346,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "발곡")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "탑석")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -328,6 +358,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "기흥")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "전대에버랜드")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -338,6 +370,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "판교")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "여주")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -348,6 +382,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "신설동")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "북한산우이")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -358,6 +394,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "소사")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "원시")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -368,6 +406,8 @@ void MakeGraph::makeLine()
 		{
 			if (edge[index]->Getsource() == "김포공항")
 				link_first_station(index);
+			else if (edge[index]->Getdest() == "양촌")
+				link_last_station(index);
 			else
 				link_else_station(index);
 
@@ -385,34 +425,79 @@ void MakeGraph::makeLine()
 /*
  함수 이름 : link_first_station
  함수 기능 : 역이 첫번째 역이라면 전 역을 null로 처리하고 다음역을 가리킨다.
-			 행렬에 다음역까지 걸리는 거리 값 대입 // 소요산 -> 동두천 4분 대입
 */
 void MakeGraph::link_first_station(int index)
 {
-	edge[index]->Setpre(nullptr);											// null   <- 소요산
-	edge[index]->Setnext(station[SearchIndex(edge[index]->Getdest())]);		// 소요산 -> 동두천
+	int now_station_index = SearchIndex(edge[index]->Getsource());	// 현재 역 인덱스 저장
+	int next_station_index = SearchIndex(edge[index]->Getdest());	// 다음 역 인덱스 저장
 
-	int now_index = SearchIndex(edge[index]->Getsource());						// SubwayStation의 출발역 인덱스를 구한다.
-	int next_index = SearchIndex(edge[index]->Getdest());						// SubwayStation의 도착역 인덱스를 구한다.
+	edge[index]->Setpre(station[now_station_index]);				// 소요산	  <- line1, 4분
+	edge[index]->Setnext(station[next_station_index]);				// line1, 4분 -> 동두천
 
-	station[now_index]->SetMatrix(now_index, next_index, edge[index]->Getdistance());	// 소요산 <-> 동두천은 4분을 기록한다.
+	station[now_station_index]->Setnext(edge[index]);				// 소요산	  -> line1, 4분 (<- null이지만 기본 값이 null이므로 다음은 설정하지 않는다.)
+	
 }
 
 /*
  함수 이름 : link_else_station
- 함수 기능 : 역이 첫번째 역이 아니라면 전 역을 가리키고 다음역을 가리킨다.
-			 행렬에 다음역까지 걸리는 거리 값 대입 // 동두천 -> 보산 3분 기록
+ 함수 기능 : 역이 첫번째 마지막 역이 아니라면 전 역을 가리키고 다음역을 가리킨다.
 */
 void MakeGraph::link_else_station(int index)
 {
-	edge[index]->Setpre(station[SearchIndex(edge[--index]->Getsource())]);	// 전 역과 이어줌
-	edge[++index]->Setnext(station[SearchIndex(edge[index]->Getdest())]);	// 다음 역과 이어줌
+	int preidx = index;
+	preidx--;
 
-	int now_index = SearchIndex(edge[index]->Getsource());						// SubwayStation의 출발역 인덱스를 구한다.
-	int next_index = SearchIndex(edge[index]->Getdest());						// SubwayStation의 도착역 인덱스를 구한다.
+	int now_station_index = SearchIndex(edge[index]->Getsource());	// 현재 역 인덱스 저장
+	int next_station_index = SearchIndex(edge[index]->Getdest());	// 다음 역 인덱스 저장
 
-	station[now_index]->SetMatrix(now_index, next_index, edge[index]->Getdistance());	// 동두천 <-> 보산은 3분을 기록한다.
+	edge[index]->Setpre(station[now_station_index]);				// 전 역과 이어줌
+	edge[index]->Setnext(station[next_station_index]);				// 다음 역과 이어줌
+
+	station[now_station_index]->Setpre(edge[preidx]);				// line1, 4분 <- 동두천
+	station[now_station_index]->Setnext(edge[index]);				// 동두천	  -> line1, 3분
 }
+
+/*
+ 함수 이름 : link_last_station
+ 함수 기능 : 역이 마지막 역이라면 다음 역을 null로 처리한다.
+*/
+void MakeGraph::link_last_station(int index)
+{
+	int preidx = index;
+	preidx--;
+
+	int now_station_index = SearchIndex(edge[index]->Getsource());	// 현재 역 인덱스 저장
+	int next_station_index = SearchIndex(edge[index]->Getdest());	// 다음 역 인덱스 저장
+
+	edge[index]->Setpre(station[now_station_index]);				// 동인천	  <- line1, 3분
+	edge[index]->Setnext(station[next_station_index]);				// line1, 3분 -> 인천
+
+	station[now_station_index]->Setpre(edge[preidx]);				// line1, 2분 <- 동인천
+	station[now_station_index]->Setnext(edge[index]);				// 동인천     -> line1, 3분
+
+	station[next_station_index]->Setpre(edge[index]);				// line1, 3분 <- 인천 (-> null이지만 기본 값이 null이므로 다음은 설정하지 않는다.)
+}
+
+
+/*
+ 함수 이름 : link_line2_circle
+ 함수 기능 : 2호선 순환선 문제 해결
+*/
+void MakeGraph::link_line2_circle(int index)
+{
+	int preidx = index;
+	preidx--;
+
+	int now_station_index = SearchIndex(edge[index]->Getsource());	// 현재 역 인덱스 저장
+	int next_station_index = SearchIndex(edge[index]->Getdest());	// 다음 역 인덱스 저장
+
+	edge[index]->Setpre(station[now_station_index]);				// 충정로	  <- line2, 3분
+	edge[index]->Setnext(station[next_station_index]);				// line2, 3분 -> 시청
+
+	station[now_station_index]->Setpre(edge[preidx]);				// line2, 3분 <- 시청
+	station[next_station_index]->Setnext(edge[index]);				// 시청  	  -> line2, 2분(을지로입구)
+}
+
 
 /*
  함수 이름 : SearchIndex
@@ -470,3 +555,36 @@ MakeGraph::~MakeGraph()
 	for (int i = 0;i < EDGE_NUMBER;i++)
 		delete edge[i];
 }
+
+
+
+
+
+
+
+
+
+
+/*
+void MakeGraph::link_first_station(int index)
+{
+	edge[index]->Setpre(nullptr);											// null   <- 소요산
+	edge[index]->Setnext(station[SearchIndex(edge[index]->Getdest())]);		// 소요산 -> 동두천
+
+	int now_index = SearchIndex(edge[index]->Getsource());						// SubwayStation의 출발역 인덱스를 구한다.
+	int next_index = SearchIndex(edge[index]->Getdest());						// SubwayStation의 도착역 인덱스를 구한다.
+
+	//station[now_index]->SetMatrix(now_index, next_index, edge[index]->Getdistance());	// 소요산 <-> 동두천은 4분을 기록한다.
+}
+
+void MakeGraph::link_else_station(int index)
+{
+	edge[index]->Setpre(station[SearchIndex(edge[--index]->Getsource())]);	// 전 역과 이어줌
+	edge[++index]->Setnext(station[SearchIndex(edge[index]->Getdest())]);	// 다음 역과 이어줌
+
+	int now_index = SearchIndex(edge[index]->Getsource());						// SubwayStation의 출발역 인덱스를 구한다.
+	int next_index = SearchIndex(edge[index]->Getdest());						// SubwayStation의 도착역 인덱스를 구한다.
+
+	station[now_index]->SetMatrix(now_index, next_index, edge[index]->Getdistance());	// 동두천 <-> 보산은 3분을 기록한다.
+}
+*/

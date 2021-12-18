@@ -8,5 +8,4 @@ int main()
 {
 	SubwayMapManagement metro;
 
-	metro.initStation();
 }

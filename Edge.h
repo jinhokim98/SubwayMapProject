@@ -14,8 +14,8 @@ private:
 	std::string source;				// 출발역
 	std::string dest;				// 도착역
 	int distance;					// 역 간 거리
-	SubwayStation* next;			// 다음 역을 이어주는 포인터
-	SubwayStation* pre;				// 전 역을 이어주는 포인터
+	SubwayStation* next = nullptr;			// 다음 역을 이어주는 포인터
+	SubwayStation* pre = nullptr;				// 전 역을 이어주는 포인터
 
 public:
 	Edge(std::string linenum, std::string source, std::string dest, int distance);

@@ -54,29 +54,19 @@ string Edge::Getdest()
 
 /*
  함수 이름 : Setnext
- 함수 기능 : 다음 역 설정
+ 함수 기능 : 다음 역 설정 // 역 객체의 다음 역 멤버변수를 수정
 */
 void Edge::Setnext(SubwayStation* next)
 {
-	if (next == nullptr)
-	{
-		this->next = nullptr;
-	}
-
 	this->next = next;
 }
 
 /*
  함수 이름 : Setpre
- 함수 기능 : 전 역 설정
+ 함수 기능 : 전 역 설정 // 역 객체의 전 역 멤버변수를 수정
 */
 void Edge::Setpre(SubwayStation* pre)
 {
-	if (pre == nullptr)
-	{
-		this->pre = nullptr;
-	}
-
 	this->pre = pre;
 }
 

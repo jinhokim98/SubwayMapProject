@@ -28,5 +28,6 @@ Edge객체 따로 만들어 vertex와 vertex를 이어주는 방식으로 하자
 관리 객체에서 이 객체들을 전부 멤버변수로 가진다.  
 환승여부는 관리객체에서 edge의 호선이 변했는지 체크하는 함수로 대체하자  
 
-2021-12-07
-Edge, SubwayStation, MakeGraph 객체 구축 완료!!  
+
+**SubwayStation, Edge 객체들 간의 포인터 정리**  
+소요산 <-> line 1, 4 <-> 동두천  

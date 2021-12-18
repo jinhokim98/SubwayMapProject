@@ -22,6 +22,8 @@ private:
 
 	void link_first_station(int index);
 	void link_else_station(int index);
+	void link_last_station(int index);
+	void link_line2_circle(int index);
 	int SearchIndex(std::string name);
 
 public:
