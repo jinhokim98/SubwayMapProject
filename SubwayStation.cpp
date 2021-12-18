@@ -53,3 +53,8 @@ void SubwayStation::SetMatrix(int source, int dest, int distance, bool Is_one_wa
 	if (Is_one_way == true)
 		distance_adj[source][dest] = distance;
 }
+
+SubwayStation* SubwayStation::Getnext()
+{
+
+}

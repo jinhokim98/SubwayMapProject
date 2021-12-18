@@ -22,5 +22,7 @@ public:
 	void SetMatrix(int source, int dest, int distance);
 	void SetMatrix(int source, int dest, int distance, bool Is_one_way);
 
+	SubwayStation* Getnext();
+
 };
 

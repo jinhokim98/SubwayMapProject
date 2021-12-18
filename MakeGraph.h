@@ -1,8 +1,9 @@
 #pragma once
 #include "SubwayStation.h"
 #include "Edge.h"
+
 #define STATION_NUMBER 625
-#define EDGE_NUMBER 726
+#define EDGE_NUMBER 723
 
 /*
  클래스 이름 : makeGraph
@@ -26,6 +27,8 @@ private:
 public:
 	MakeGraph();
 	void init();
+
+	void print_Map();
 	
 	~MakeGraph();
 };

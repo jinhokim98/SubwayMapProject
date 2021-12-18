@@ -86,7 +86,7 @@ void MakeGraph::makeLine()
 	// 노선 만들기(1호선 ~ 김포골드라인)
 	while (true)
 	{
-		if (index >= 726) // 마지막 역까지 전부 추가했을 때 반복문 탈출
+		if (index > EDGE_NUMBER) // 마지막 역까지 전부 추가했을 때 반복문 탈출
 			break;
 
 		if (edge[index]->GetSubwayLine() == "line1")
@@ -442,6 +442,18 @@ void MakeGraph::init()
 	initStation();
 	initEdge();
 	makeLine();
+}
+
+void print_map()
+{
+	SubwayStation* p = nullptr;
+
+	int i = 0;
+
+	while(!p)
+	{
+		
+	}
 }
 
 /*
