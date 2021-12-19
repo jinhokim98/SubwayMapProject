@@ -48,6 +48,13 @@ void MakeGraph::initStation()
 
 		station[index++] = new SubwayStation(subwayname);	// 역 객체 배열 생성 (순서대로)
 	}
+
+	for (int i = 0; i < STATION_NUMBER; i++)
+	{
+		cout << station[i]->GetSubwayStationName() << endl;
+	}
+
+	stationinfo.close();
 }
 
 /*
@@ -73,6 +80,15 @@ void MakeGraph::initEdge()
 		edge[index++] = new Edge(linenum, source, dest, distance);	// 엣지 배열 생성 (순서대로)
 	}
 
+	for (int i = 0; i < EDGE_NUMBER; i++)
+	{
+		cout << edge[i]->GetSubwayLine() << ", ";
+		cout << edge[i]->Getsource() << ", ";
+		cout << edge[i]->Getdest() << ", ";
+		cout << edge[i]->Getdistance() << endl;
+	}
+
+	fin.close();
 }
 
 /*
@@ -506,15 +522,11 @@ void MakeGraph::link_line6_one_way_problem(int index, string name)
 */
 int MakeGraph::SearchIndex(string name)
 {
-	int index = 0;
-
-	for (int i = 0; i < STATION_NUMBER; i++)
+	for (int index = 0; index < STATION_NUMBER; index++)
 	{
 		if (station[index]->GetSubwayStationName() == name)
 			return index;
 	}
-	
-	return index;
 }
 
 /*
@@ -530,16 +542,35 @@ void MakeGraph::init()
 }
 
 
+SubwayStation* MakeGraph::GetStation(string station_name)
+{
+	int index = SearchIndex(station_name);
+	return station[index];
+}
+
+
+SubwayStation* MakeGraph::GetStation(Edge* q)
+{
+	if (q == nullptr)
+		return nullptr;
+
+	return q->Getnext();
+}
+
+Edge* MakeGraph::GetEdge(SubwayStation* p)
+{
+	if (p == nullptr)
+		return nullptr;
+
+	return p->Getnext();
+}
 
 
 /*
- 소멸자 : 파일 닫고 동적생성한 객체 배열들을 해제한다.
+ 소멸자 : 동적생성한 객체 배열들을 해제한다.
 */
 MakeGraph::~MakeGraph()
 {
-	stationinfo.close();
-	fin.close();
-
 	for (int i = 0;i < STATION_NUMBER;i++)
 		delete station[i];
 

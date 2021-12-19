@@ -25,13 +25,19 @@ private:
 	void link_last_station(int index);
 	void link_line6_one_way_problem(int index, std::string name);
 
+	
+
 public:
 	MakeGraph();
 	void init();
+
+	SubwayStation* GetStation(std::string station_name);
+	SubwayStation* GetStation(Edge* q);
+
+	Edge* GetEdge(SubwayStation* p);
+
+
 	int SearchIndex(std::string name);
-
-
-
 	
 	~MakeGraph();
 };

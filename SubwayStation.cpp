@@ -1,5 +1,6 @@
 #include <iostream>
 #include "SubwayStation.h"
+#include "Edge.h"
 
 using namespace std;
 

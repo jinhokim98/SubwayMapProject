@@ -31,3 +31,5 @@ Edge객체 따로 만들어 vertex와 vertex를 이어주는 방식으로 하자
 
 **SubwayStation, Edge 객체들 간의 포인터 정리**  
 소요산 <-> line 1, 4 <-> 동두천  
+
+환승역 대비 필요하다....  

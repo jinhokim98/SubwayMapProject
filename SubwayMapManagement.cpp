@@ -26,14 +26,19 @@ SubwayMapManagement::SubwayMapManagement()
 
 void SubwayMapManagement::print_Map()
 {
-	SubwayStation* p = nullptr;
+	SubwayStation* p = metro->GetStation("소요산");
 	Edge* q = nullptr;
 
-	int start_index = metro->SearchIndex("소요산");
 
 	while (!p)
 	{
-		
+		cout << p->GetSubwayStationName() << ", ";
+
+		q = p->Getnext();
+		cout << q->GetSubwayLine() << ", ";
+		cout << q->Getdistance() << ", ";
+
+		p = q->Getnext();
 	}
 }
 /*

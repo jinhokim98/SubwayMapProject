@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
-#include "SubwayStation.h"
 
+class SubwayStation;
 
 /*
  클래스 이름 : Edge
