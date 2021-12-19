@@ -49,11 +49,6 @@ void MakeGraph::initStation()
 		station[index++] = new SubwayStation(subwayname);	// 역 객체 배열 생성 (순서대로)
 	}
 
-	for (int i = 0; i < STATION_NUMBER; i++)
-	{
-		cout << station[i]->GetSubwayStationName() << endl;
-	}
-
 	stationinfo.close();
 }
 
@@ -80,16 +75,9 @@ void MakeGraph::initEdge()
 		edge[index++] = new Edge(linenum, source, dest, distance);	// 엣지 배열 생성 (순서대로)
 	}
 
-	for (int i = 0; i < EDGE_NUMBER; i++)
-	{
-		cout << edge[i]->GetSubwayLine() << ", ";
-		cout << edge[i]->Getsource() << ", ";
-		cout << edge[i]->Getdest() << ", ";
-		cout << edge[i]->Getdistance() << endl;
-	}
-
 	fin.close();
 }
+
 
 /*
  함수 이름 : makeLine
@@ -514,6 +502,141 @@ void MakeGraph::link_line6_one_way_problem(int index, string name)
 	station[now_station_index]->Setnext(edge[index]);				// 응암	  -> line6, 1분
 }
 
+/*
+ 함수 이름 : Getdegree
+ 함수 기능 : 각 역들의 degree를 조사하여 저장한다.
+*/
+void MakeGraph::Getdegree(SubwayStation** sub, Edge** edge)
+{
+	int i = 0;
+	int j = 0;
+	int next_i = 0;
+	int sub_idx = 0;
+	int exceptional_case = 0;
+
+	string neighbor_table[STATION_NUMBER][8];
+	string station_name[STATION_NUMBER];
+
+	for (int k = 0; k < STATION_NUMBER; k++)
+		for (int l = 0; l < 8; l++)
+			neighbor_table[k][l] = "null";	// 의미없는 문자로 채우기
+
+
+	// 소요산 역 입력처리 위해
+	exceptional_case = SearchIndex(edge[i]->Getsource());
+	neighbor_table[exceptional_case][j] = "동두천";
+
+	// 순환선 오류
+	exceptional_case = SearchIndex("시청");
+	neighbor_table[exceptional_case][j++] = "충정로";
+	neighbor_table[exceptional_case][j] = "을지로입구";
+
+	j = 0;
+
+	for (i = 0; i < EDGE_NUMBER - 1; i++)
+	{
+		next_i = i + 1;
+
+		if (edge[i]->Getdest() == edge[next_i]->Getsource()) // 일반적인 케이스
+		{
+			sub_idx = SearchIndex(edge[i]->Getdest());
+
+			while (neighbor_table[sub_idx][j] != "null")
+				j++;
+
+			neighbor_table[sub_idx][j++] = edge[i]->Getsource();
+			neighbor_table[sub_idx][j] = edge[next_i]->Getdest();
+			j = 0;
+
+		}
+		else	// 호선의 첫 역이거나 마지막 역인 경우
+		{
+			// 끝 역 처리
+			sub_idx = SearchIndex(edge[i]->Getdest());
+
+			while (neighbor_table[sub_idx][j] != "null")
+				j++;
+
+			neighbor_table[sub_idx][j] = edge[i]->Getsource();
+			j = 0;
+
+			// 시작 역 처리
+			sub_idx = SearchIndex(edge[next_i]->Getsource());
+
+			while (neighbor_table[sub_idx][j] != "null")
+				j++;
+
+			neighbor_table[sub_idx][j] = edge[next_i]->Getdest();
+			j = 0;
+
+		}
+	}
+	
+	// 6호선 단방향 문제 해결
+	for (i = 325; i < 331; i++)
+	{
+		exceptional_case = SearchIndex(edge[i]->Getdest());
+
+		for (j = 0; j < 4; j++)	// 이 구간 내 역의 최대 degree는 4이므로
+		{
+			if (neighbor_table[exceptional_case][j] == edge[i]->Getsource())
+				neighbor_table[exceptional_case][j] = "null";	// ex) 응암에서 구산은 갈 수 없으므로 지워준다.
+
+		}
+	}
+
+	for (i = 0;i < STATION_NUMBER;i++)
+	{
+		station_name[i] = sub[i]->GetSubwayStationName();
+	}
+
+	int count = 0;
+
+	for (i = 0;i < STATION_NUMBER;i++)
+	{
+		cout << station_name[i] << " : ";
+
+		for (j = 0;j < 8;j++)
+		{
+			if (neighbor_table[i][j] != "null")
+			{
+				cout << neighbor_table[i][j] << ", ";
+				count++;
+			}
+		}
+		cout << count << endl;
+
+		count = 0;
+	}
+
+	// 내일 구현하자
+	int count_degree = 0;	// 중복은 제외할 예정
+	int degree_table_number[STATION_NUMBER] = { 0, };
+
+	for (i = 0; i < STATION_NUMBER; i++)
+	{
+
+	}
+}
+
+Edge** MakeGraph::GetEdgePointer()
+{
+	return edge;
+}
+
+SubwayStation** MakeGraph::GetSubwayPointer()
+{
+	return station;
+}
+
+/*
+ 함수 이름 : link_transferStation
+ 함수 기능 : 환승역에 대한 문제를 처리해준다.
+*/
+void MakeGraph::link_transferStation(int index, int degree)
+{
+	
+}
 
 /*
  함수 이름 : SearchIndex
@@ -538,7 +661,7 @@ void MakeGraph::init()
 {
 	initStation();
 	initEdge();
-	makeLine();
+	//makeLine();
 }
 
 

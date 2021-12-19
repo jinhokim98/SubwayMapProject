@@ -1,7 +1,7 @@
 #pragma once
 #include "MakeGraph.h"
 
-#define STATION_NUMBER 625
+#define STATION_NUMBER 624
 
 /*
  클래스 이름 : SubwayMapManagement
@@ -17,7 +17,7 @@ private:
 
 public:
 	SubwayMapManagement();
-
+	void print_degree();
 	void print_Map();
 	void Shortest_route(std::string start, std::string goal);
 

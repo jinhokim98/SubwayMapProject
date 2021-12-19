@@ -2,7 +2,7 @@
 #include "SubwayStation.h"
 #include "Edge.h"
 
-#define STATION_NUMBER 625
+#define STATION_NUMBER 624
 #define EDGE_NUMBER 723
 
 /*
@@ -25,11 +25,17 @@ private:
 	void link_last_station(int index);
 	void link_line6_one_way_problem(int index, std::string name);
 
-	
+	void link_transferStation(int index, int degree);
 
 public:
 	MakeGraph();
 	void init();
+
+	//½ÃÇè¿ë
+	void Getdegree(SubwayStation** sub, Edge** edge);
+	Edge** GetEdgePointer();
+	SubwayStation** GetSubwayPointer();
+
 
 	SubwayStation* GetStation(std::string station_name);
 	SubwayStation* GetStation(Edge* q);

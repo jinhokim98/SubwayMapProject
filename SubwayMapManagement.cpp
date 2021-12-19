@@ -24,19 +24,31 @@ SubwayMapManagement::SubwayMapManagement()
 	}
 }
 
+void SubwayMapManagement::print_degree()
+{
+	Edge** pedge = metro->GetEdgePointer();
+	SubwayStation** psub = metro->GetSubwayPointer();
+
+	metro->Getdegree(psub, pedge);
+}
+
 void SubwayMapManagement::print_Map()
 {
 	SubwayStation* p = metro->GetStation("¼Ò¿ä»ê");
 	Edge* q = nullptr;
 
 
-	while (!p)
+	while (p)
 	{
 		cout << p->GetSubwayStationName() << ", ";
 
 		q = p->Getnext();
+		
+		if (q == nullptr)
+			break;
+
 		cout << q->GetSubwayLine() << ", ";
-		cout << q->Getdistance() << ", ";
+		cout << q->Getdistance() << ", " << endl;
 
 		p = q->Getnext();
 	}
