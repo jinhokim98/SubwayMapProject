@@ -2,6 +2,13 @@
 #include "SubwayStation.h"
 #include "Edge.h"
 
+enum location
+{
+	firstcase,
+	elsecase,
+	lastcase
+};
+
 #define STATION_NUMBER 624
 #define EDGE_NUMBER 723
 
@@ -23,11 +30,14 @@ private:
 	void link_first_station(int index);
 	void link_else_station(int index);
 	void link_last_station(int index);
-	void link_line6_one_way_problem(int index, std::string name);
+	void link_line6_one_way_problem(int index, std::string name, bool Is_transfer_station);
 
-	void link_transferStation(int index, int degree);
+	void link_station(int loc, int index, int now_station_index, int next_station_index, int degree);
+	void link_station_case(int loc, int index, int now_station_index, int next_station_index, int next, int pre, int degree);
+	int check_next_station_case(int next_station_index);
 
 public:
+
 	MakeGraph();
 	void init();
 
@@ -36,12 +46,10 @@ public:
 	Edge** GetEdgePointer();
 	SubwayStation** GetSubwayPointer();
 
-
 	SubwayStation* GetStation(std::string station_name);
 	SubwayStation* GetStation(Edge* q);
 
-	Edge* GetEdge(SubwayStation* p);
-
+	Edge* GetEdge(SubwayStation* p, int pointer_num);
 
 	int SearchIndex(std::string name);
 	

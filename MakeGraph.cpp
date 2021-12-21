@@ -41,12 +41,14 @@ void MakeGraph::initStation()
 	int index = 0;
 
 	string subwayname;
+	int edgenum;
 
 	while (!stationinfo.eof())
 	{
 		stationinfo >> subwayname;
+		stationinfo >> edgenum;
 
-		station[index++] = new SubwayStation(subwayname);	// 역 객체 배열 생성 (순서대로)
+		station[index++] = new SubwayStation(subwayname, edgenum);	// 역 객체 배열 생성 (순서대로)
 	}
 
 	stationinfo.close();
@@ -90,7 +92,7 @@ void MakeGraph::makeLine()
 	// 노선 만들기(1호선 ~ 김포골드라인)
 	while (true)
 	{
-		if (index > EDGE_NUMBER) // 마지막 역까지 전부 추가했을 때 반복문 탈출
+		if (index >= EDGE_NUMBER) // 마지막 역까지 전부 추가했을 때 반복문 탈출
 			break;
 
 		if (edge[index]->GetSubwayLine() == "line1")
@@ -201,24 +203,36 @@ void MakeGraph::makeLine()
 			index++;
 		}
 
-		else if (edge[index]->GetSubwayLine() == "line6") // 단방향 구간 처리 필요
+		else if (edge[index]->GetSubwayLine() == "line6") // 단방향 구간 처리 필요(이게 문제인 듯 싶다.)
 		{
 			if (edge[index]->Getsource() == "신내")
 			{
 				link_first_station(index);
+			}
+			else if (edge[index]->Getsource() == "응암")	// 단방향 구간 처리 // 역촌 -> 불광 -> 독바위 -> 연신내 -> 구산 -> 응암
+			{
+				link_line6_one_way_problem(index, "응암", false);
+				index++;
+
+				link_line6_one_way_problem(index, "역촌", false);
+				index++;
+
+				link_line6_one_way_problem(index, "불광", true);
+				index++;
+
+				link_line6_one_way_problem(index, "독바위", false);
+				index++;
+
+				link_line6_one_way_problem(index, "연신내", true);
+				index++;
+
+				link_line6_one_way_problem(index, "구산", false);
 				index++;
 			}
-			else if (edge[index]->Getsource() == "응암")	// 단방향 구간 처리
-			{
-				link_line6_one_way_problem(index, "응암");
-				index++;									// 응암에서 역촌으로 옮김
+			else
+				link_else_station(index);
 
-				for (int i = 0; i < 5;i++)					// 역촌 -> 불광 -> 독바위 -> 연신내 -> 구산 -> 응암
-				{
-					link_line6_one_way_problem(index, "not응암");
-					index++;
-				}
-			}
+			index++;
 		}
 
 		else if (edge[index]->GetSubwayLine() == "line7")
@@ -421,6 +435,7 @@ void MakeGraph::makeLine()
 	}
 }
 
+
 /*
  함수 이름 : link_first_station
  함수 기능 : 역이 첫번째 역이라면 전 역을 null로 처리하고 다음역을 가리킨다.
@@ -433,8 +448,7 @@ void MakeGraph::link_first_station(int index)
 	edge[index]->Setpre(station[now_station_index]);				// 소요산	  <- line1, 4분
 	edge[index]->Setnext(station[next_station_index]);				// line1, 4분 -> 동두천
 
-	station[now_station_index]->Setnext(edge[index]);				// 소요산	  -> line1, 4분 (<- null이지만 기본 값이 null이므로 다음은 설정하지 않는다.)
-	
+	link_station(firstcase, index, now_station_index, next_station_index, station[now_station_index]->Getedgenum());
 }
 
 /*
@@ -443,17 +457,13 @@ void MakeGraph::link_first_station(int index)
 */
 void MakeGraph::link_else_station(int index)
 {
-	int preidx = index;
-	preidx--;
-
 	int now_station_index = SearchIndex(edge[index]->Getsource());	// 현재 역 인덱스 저장
 	int next_station_index = SearchIndex(edge[index]->Getdest());	// 다음 역 인덱스 저장
 
 	edge[index]->Setpre(station[now_station_index]);				// 전 역과 이어줌
 	edge[index]->Setnext(station[next_station_index]);				// 다음 역과 이어줌
 
-	station[now_station_index]->Setpre(edge[preidx]);				// line1, 4분 <- 동두천
-	station[now_station_index]->Setnext(edge[index]);				// 동두천	  -> line1, 3분
+	link_station(elsecase, index, now_station_index, next_station_index, station[now_station_index]->Getedgenum());
 }
 
 /*
@@ -462,19 +472,13 @@ void MakeGraph::link_else_station(int index)
 */
 void MakeGraph::link_last_station(int index)
 {
-	int preidx = index;
-	preidx--;
-
 	int now_station_index = SearchIndex(edge[index]->Getsource());	// 현재 역 인덱스 저장
 	int next_station_index = SearchIndex(edge[index]->Getdest());	// 다음 역 인덱스 저장
 
 	edge[index]->Setpre(station[now_station_index]);				// 동인천	  <- line1, 3분
 	edge[index]->Setnext(station[next_station_index]);				// line1, 3분 -> 인천
 
-	station[now_station_index]->Setpre(edge[preidx]);				// line1, 2분 <- 동인천
-	station[now_station_index]->Setnext(edge[index]);				// 동인천     -> line1, 3분
-
-	station[next_station_index]->Setpre(edge[index]);				// line1, 3분 <- 인천 (-> null이지만 기본 값이 null이므로 다음은 설정하지 않는다.)
+	link_station(lastcase, index, now_station_index, next_station_index, station[now_station_index]->Getedgenum());
 }
 
 /*
@@ -483,7 +487,7 @@ void MakeGraph::link_last_station(int index)
 			 응암이면 전 역인 새절과 이어주어야한다.
 			 응암이 아니면 전을 이어주지 않아야 한다.
 */
-void MakeGraph::link_line6_one_way_problem(int index, string name)
+void MakeGraph::link_line6_one_way_problem(int index, string name, bool Is_transfer_station)
 {
 	int preidx = index;
 	preidx--;
@@ -494,17 +498,132 @@ void MakeGraph::link_line6_one_way_problem(int index, string name)
 	edge[index]->Setpre(nullptr);									// 전 역 null
 	edge[index]->Setnext(station[next_station_index]);				// 다음 역과 이어줌
 
-	if(name == "응암")
-		station[now_station_index]->Setpre(edge[preidx]);			// line6, 2분 <- 응암
+	if (name == "응암")
+	{
+		station[now_station_index]->Setadj(edge[preidx], trans0_pre);	// line6, 2분 <- 응암
+		station[now_station_index]->Setadj(edge[index], trans0_next);	// 응암	  -> line6, 1분
+	}
+	else if (Is_transfer_station == false)	// 환승역이 아닐 경우
+	{
+		station[now_station_index]->Setadj(nullptr, trans0_pre);		// null       <- 역촌
+		station[now_station_index]->Setadj(edge[index], trans0_next);	// 응암	  -> line6, 1분
+	}
 	else
-		station[now_station_index]->Setpre(nullptr);				// null       <- 역촌
+	{
+		station[now_station_index]->Setadj(nullptr, trans1_pre);		// 6호선이 3호선보다 늦게 만들어지므로 trans1이다. 
+		station[now_station_index]->Setadj(edge[index], trans1_next);	// 응암	  -> line6, 1분
+	}
+		
+}
 
-	station[now_station_index]->Setnext(edge[index]);				// 응암	  -> line6, 1분
+
+/*
+ 함수 이름 : link_station
+ 함수 기능 : station의 edge* 멤버변수를 채워준다.
+
+ 인자 : int loc		: first=0, else=1, last=2,
+		int index	: edge의 인덱스 값
+		int now_station_index : 현재 역
+		int next_station_index: 다음 역
+		int degree	: 현재 역의 edge 수
+ 반환값 : 없음
+*/
+void MakeGraph::link_station(int loc, int index, int now_station_index, int next_station_index, int degree)
+{
+	if (degree <= 2)	// 환승역이 아닐 때
+		link_station_case(loc, index, now_station_index, next_station_index, trans0_next, trans0_pre, degree);
+	else
+	{
+		// 환승역이지만 아직 포인터가 채워지지 않은 경우
+		if (station[now_station_index]->Getadj(trans0_next) == nullptr && station[now_station_index]->Getadj(trans0_pre) == nullptr)
+			link_station_case(loc, index, now_station_index, next_station_index, trans0_next, trans0_pre, degree);
+		
+		else
+		{
+			if(station[now_station_index]->Getadj(trans1_next) == nullptr && station[now_station_index]->Getadj(trans1_pre) == nullptr)
+				link_station_case(loc, index, now_station_index, next_station_index, trans1_next, trans1_pre, degree);
+			
+			else
+			{
+				if (station[now_station_index]->Getadj(trans2_next) == nullptr && station[now_station_index]->Getadj(trans2_pre) == nullptr)
+					link_station_case(loc, index, now_station_index, next_station_index, trans2_next, trans2_pre, degree);
+				else
+					link_station_case(loc, index, now_station_index, next_station_index, trans3_next, trans3_pre, degree);
+			}
+		}	
+	}
+}
+			
+
+/*
+ 함수 이름 : link_station_case
+ 함수 기능 : station의 edge* 멤버변수를 환승역에 따라 다르게 설정해주는 함수
+ 
+ 인자 : int loc		: first=0, else=1, last=2,
+		int index	: edge의 인덱스 값
+		int now_station_index : 현재 역
+		int next_station_index: 다음 역
+		int next	: 다음 엣지
+		int pre	    : 전 엣지
+ 반환값 : 없음
+*/
+void MakeGraph::link_station_case(int loc, int index, int now_station_index, int next_station_index, int next, int pre, int degree)
+{
+	int check = next_station_index;
+	int preidx = index - 1;	// edge객체 배열의 전 index
+	int check_next_station = 0;
+
+	switch (loc)
+	{
+	case 0: // 첫 역
+		station[now_station_index]->Setadj(edge[index], next); // 소요산	-> line1, 4분
+		break;
+	case 1:	// 나머지 역
+		station[now_station_index]->Setadj(edge[preidx], pre); // line1, 4분 <- 동두천
+		station[now_station_index]->Setadj(edge[index], next); // 동두천	-> line1, 3분
+		break;
+	case 2:	// 마지막 역
+		station[now_station_index]->Setadj(edge[preidx], pre); // line1, 2분 <- 동인천
+		station[now_station_index]->Setadj(edge[index], next); // 동인천     -> line1, 3분
+		
+		// 까치산, 모란, 서울역, 시청, 신설동, 오금, 오이도, 인천이 문제
+		if(check != 102 && check != 207 && check != 302 && check != 358 && check != 380 && check != 444 && check != 452 && check != 499) // 
+			station[next_station_index]->Setadj(edge[index], pre); // line1, 3분 <- 인천
+		else
+		{
+			check_next_station = check_next_station_case(check);
+			station[next_station_index]->Setadj(edge[index], check_next_station);
+		}
+		break;
+	}
+}
+
+/*
+ 함수 이름 : check_next_station_case
+ 함수 기능 : 다음 역이 마지막 역일 때 그 역이 환승역일 경우 오류를 해결 
+
+ 인자 : int next_station_index: 다음 역
+ 반환값 : 없음
+*/
+int MakeGraph::check_next_station_case(int next_station_index)
+{
+	if (next_station_index == 499) // 수인분당 인천
+		return trans1_pre;
+	else if (next_station_index == 302)
+		return trans2_pre;
+	else
+		return trans1_pre;
+
+	/*
+		else if (next_station_index == 102)
+		return trans0_pre;
+	*/
 }
 
 /*
  함수 이름 : Getdegree
  함수 기능 : 각 역들의 degree를 조사하여 저장한다.
+			 stationName의 환승역 degree값을 구하기 위해 사용하였다.
 */
 void MakeGraph::Getdegree(SubwayStation** sub, Edge** edge)
 {
@@ -525,12 +644,6 @@ void MakeGraph::Getdegree(SubwayStation** sub, Edge** edge)
 	// 소요산 역 입력처리 위해
 	exceptional_case = SearchIndex(edge[i]->Getsource());
 	neighbor_table[exceptional_case][j] = "동두천";
-
-	// 순환선 오류
-	exceptional_case = SearchIndex("시청");
-	neighbor_table[exceptional_case][j++] = "충정로";
-	neighbor_table[exceptional_case][j] = "을지로입구";
-
 	j = 0;
 
 	for (i = 0; i < EDGE_NUMBER - 1; i++)
@@ -585,6 +698,11 @@ void MakeGraph::Getdegree(SubwayStation** sub, Edge** edge)
 		}
 	}
 
+	// 양촌역 입력처리 위해
+	exceptional_case = SearchIndex("양촌");
+	neighbor_table[exceptional_case][j] = "구래";
+	j = 0;
+
 	for (i = 0;i < STATION_NUMBER;i++)
 	{
 		station_name[i] = sub[i]->GetSubwayStationName();
@@ -609,14 +727,9 @@ void MakeGraph::Getdegree(SubwayStation** sub, Edge** edge)
 		count = 0;
 	}
 
-	// 내일 구현하자
-	int count_degree = 0;	// 중복은 제외할 예정
+	int k = 0;
 	int degree_table_number[STATION_NUMBER] = { 0, };
 
-	for (i = 0; i < STATION_NUMBER; i++)
-	{
-
-	}
 }
 
 Edge** MakeGraph::GetEdgePointer()
@@ -629,14 +742,6 @@ SubwayStation** MakeGraph::GetSubwayPointer()
 	return station;
 }
 
-/*
- 함수 이름 : link_transferStation
- 함수 기능 : 환승역에 대한 문제를 처리해준다.
-*/
-void MakeGraph::link_transferStation(int index, int degree)
-{
-	
-}
 
 /*
  함수 이름 : SearchIndex
@@ -661,7 +766,7 @@ void MakeGraph::init()
 {
 	initStation();
 	initEdge();
-	//makeLine();
+	makeLine();
 }
 
 
@@ -680,14 +785,13 @@ SubwayStation* MakeGraph::GetStation(Edge* q)
 	return q->Getnext();
 }
 
-Edge* MakeGraph::GetEdge(SubwayStation* p)
+Edge* MakeGraph::GetEdge(SubwayStation* p, int pointer_num)
 {
 	if (p == nullptr)
 		return nullptr;
 
-	return p->Getnext();
+	return p->Getadj(pointer_num);
 }
-
 
 /*
  소멸자 : 동적생성한 객체 배열들을 해제한다.

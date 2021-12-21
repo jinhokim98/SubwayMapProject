@@ -32,17 +32,16 @@ void SubwayMapManagement::print_degree()
 	metro->Getdegree(psub, pedge);
 }
 
-void SubwayMapManagement::print_Map()
+void SubwayMapManagement::print_map()
 {
-	SubwayStation* p = metro->GetStation("소요산");
+	SubwayStation* p = metro->GetStation("문산");
 	Edge* q = nullptr;
 
-
-	while (p)
+	while (p->GetSubwayStationName() != "지평")
 	{
 		cout << p->GetSubwayStationName() << ", ";
 
-		q = p->Getnext();
+		q = p->Getadj(trans0_next);
 		
 		if (q == nullptr)
 			break;

@@ -12,13 +12,13 @@ class SubwayMapManagement
 private:
 	MakeGraph* metro;
 	int transfer;				// 환승횟수
-	int distance_adj[STATION_NUMBER][STATION_NUMBER];	// 지하철역 인접행렬
+	int distance_adj[STATION_NUMBER][STATION_NUMBER] = { 0, };	// 지하철역 인접행렬
 
 
 public:
 	SubwayMapManagement();
 	void print_degree();
-	void print_Map();
+	void print_map();
 	void Shortest_route(std::string start, std::string goal);
 
 	~SubwayMapManagement();

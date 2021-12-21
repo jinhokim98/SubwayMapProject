@@ -8,6 +8,6 @@ int main()
 {
 	SubwayMapManagement metro;
 
-	metro.print_degree();
+	metro.print_map();
 
 }

@@ -5,11 +5,18 @@
 using namespace std;
 
 /*
- 생성자 : 역 이름 저장
+ 생성자 : 역 이름과 필요한 포인터 수를 저장하고
+		  역 포인터를 모두 null로 초기화한다.
 */
-SubwayStation::SubwayStation(string stationName)
+SubwayStation::SubwayStation(string stationName, int edgenum)
 {
 	this->stationName = stationName;
+	this->edgenum = edgenum;
+
+	for (int i = trans0_next; i <= trans3_pre; i++)
+	{
+		adj[i] = nullptr;
+	}
 }
 
 /*
@@ -22,39 +29,31 @@ string SubwayStation::GetSubwayStationName()
 }
 
 /*
- 함수 이름 : Getnext
- 함수 기능 : 다음 엣지 반환
+ 함수 이름 : Getedgenum
+ 함수 기능 : 해당역이 갈 수 있는 길의 수를 반환한다.
 */
-Edge* SubwayStation::Getnext()
+int SubwayStation::Getedgenum()
 {
-	return next;
+	return edgenum;
 }
 
 /*
- 함수 이름 : Getpre
- 함수 기능 : 전 엣지 반환
+ 함수 이름 : Getnext
+ 함수 기능 : 다음 엣지 반환
 */
-Edge* SubwayStation::Getpre()
+Edge* SubwayStation::Getadj(int pointer_num)
 {
-	return pre;
+	return adj[pointer_num];
 }
+
 
 /*
  함수 이름 : Setnext
  함수 기능 : 다음 역의 엣지 설정
 */
-void SubwayStation::Setnext(Edge* next)
+void SubwayStation::Setadj(Edge* next, int pointer_num)
 {
-	this->next = next;
-}
-
-/*
- 함수 이름 : Setpre
- 함수 기능 : 전 역의 엣지 설정
-*/
-void SubwayStation::Setpre(Edge* pre)
-{
-	this->pre = pre;
+	this->adj[pointer_num] = next;
 }
 
 
