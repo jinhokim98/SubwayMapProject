@@ -227,7 +227,6 @@ void MakeGraph::makeLine()
 				index++;
 
 				link_line6_one_way_problem(index, "구산", false);
-				index++;
 			}
 			else
 				link_else_station(index);
@@ -587,7 +586,7 @@ void MakeGraph::link_station_case(int loc, int index, int now_station_index, int
 		station[now_station_index]->Setadj(edge[index], next); // 동인천     -> line1, 3분
 		
 		// 까치산, 모란, 서울역, 시청, 신설동, 오금, 오이도, 인천이 문제
-		if(check != 102 && check != 207 && check != 302 && check != 358 && check != 380 && check != 444 && check != 452 && check != 499) // 
+		if(check != 102 && check != 207 && check != 302 && check != 358 && check != 380 && check != 445 && check != 453 && check != 500) // 
 			station[next_station_index]->Setadj(edge[index], pre); // line1, 3분 <- 인천
 		else
 		{
@@ -607,7 +606,7 @@ void MakeGraph::link_station_case(int loc, int index, int now_station_index, int
 */
 int MakeGraph::check_next_station_case(int next_station_index)
 {
-	if (next_station_index == 499) // 수인분당 인천
+	if (next_station_index == 500) // 수인분당 인천
 		return trans1_pre;
 	else if (next_station_index == 302)
 		return trans2_pre;
@@ -755,6 +754,8 @@ int MakeGraph::SearchIndex(string name)
 		if (station[index]->GetSubwayStationName() == name)
 			return index;
 	}
+
+	return -1;
 }
 
 /*

@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 
-#define STATION_NUMBER 624
+#define STATION_NUMBER 625
 
 enum pointer_name
 {

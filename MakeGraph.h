@@ -9,7 +9,6 @@ enum location
 	lastcase
 };
 
-#define STATION_NUMBER 624
 #define EDGE_NUMBER 723
 
 /*

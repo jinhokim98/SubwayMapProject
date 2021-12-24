@@ -1,7 +1,8 @@
 #pragma once
+#include <queue>
 #include "MakeGraph.h"
 
-#define STATION_NUMBER 624
+#define INF 9999
 
 /*
  클래스 이름 : SubwayMapManagement
@@ -11,15 +12,19 @@ class SubwayMapManagement
 {
 private:
 	MakeGraph* metro;
-	int transfer;				// 환승횟수
-	int distance_adj[STATION_NUMBER][STATION_NUMBER] = { 0, };	// 지하철역 인접행렬
-
+	int transfer;								// 환승횟수
+	int distance_adj[STATION_NUMBER];	// 지하철역 인접행렬
+	std::string route[STATION_NUMBER];
+	std::string short_route[STATION_NUMBER];
+	int route_index;
 
 public:
 	SubwayMapManagement();
 	void print_degree();
 	void print_map();
-	void Shortest_route(std::string start, std::string goal);
+	bool Shortest_route(std::string start, std::string goal);
+	void print_path(std::string start, std::string goal);
+	
 
 	~SubwayMapManagement();
 };
