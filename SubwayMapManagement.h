@@ -3,6 +3,7 @@
 #include "MakeGraph.h"
 
 #define INF 9999
+#define TRANSFER_TIME 3
 
 /*
  클래스 이름 : SubwayMapManagement

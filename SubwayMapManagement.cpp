@@ -53,7 +53,7 @@ void SubwayMapManagement::print_map()
 bool SubwayMapManagement::Shortest_route(string start, string goal)
 {
 	int i = 0;
-	int next_cost[8] = { INF, INF, INF, INF, INF, INF, INF, INF };
+	int next_cost = INF;
 
 	int start_index = metro->SearchIndex(start);
 	int goal_index = metro->SearchIndex(goal);
@@ -68,7 +68,12 @@ bool SubwayMapManagement::Shortest_route(string start, string goal)
 	SubwayStation* p = metro->GetStation(start);		// 출발역을 p에 담는다.
 	SubwayStation* move_p;
 	SubwayStation* temp[8];	// 역의 최대 degree가 8이므로
-	Edge* q[8];
+	Edge* q[8];				// 역에 이어진 엣지를 담을 변수
+	Edge* pre_q[8];			// 전의 역의 엣지정보 저장 (환승여부확인)
+	bool first = true;		// 첫번째이면 환승하지 않는다.
+
+	for (i = 0;i < 8;i++)
+		pre_q[i] = nullptr;
 
 	queue.push(make_pair(0, p));
 
@@ -86,16 +91,26 @@ bool SubwayMapManagement::Shortest_route(string start, string goal)
 						
 		for (i = 0;i < 8;i++) // 해당 역에서 갈 수 있는 모든 역을 탐색
 		{
-			if (temp[i] != nullptr)
-				q[i] = temp[i]->Getadj(i);
-			else
-				continue;
-			
+			q[i] = temp[i]->Getadj(i);
+
 			if (q[i] == nullptr)
 				continue;
 
-			next_cost[i] = q[i]->Getdistance(); // 다음역까지의 거리를 저장해둔다.
-			
+			if (first != true)
+			{
+				if (pre_q[i] != nullptr)
+				{
+					if (pre_q[i]->GetSubwayLine() == q[i]->GetSubwayLine()) // 전 엣지의 호선과 현 엣지의 호선이 같다면
+						next_cost = q[i]->Getdistance();		// 다음역까지의 거리를 저장해둔다.
+					else
+						next_cost = q[i]->Getdistance() + 3;	// 환승시 3분 추가
+				}
+			}
+			else // 첫번째 시도일 경우 환승이 아니기 때문에 환승여부를 생각하지 않고 거리만 추가
+			{
+				next_cost = q[i]->Getdistance();
+			}
+
 			if (i % 2 == 0)		// next
 				temp[i] = q[i]->Getnext();
 			else				// pre
@@ -106,9 +121,9 @@ bool SubwayMapManagement::Shortest_route(string start, string goal)
 			int nextidx = metro->SearchIndex(next_station);
 
 			// 현 최단거리보다 새롭게 찾은 경로의 거리가 더 짧다면 짧은 거리로 갱신한 후 queue에 푸시
-			if (distance_adj[nextidx] > distance + next_cost[i])
+			if (distance_adj[nextidx] > distance + next_cost)
 			{
-				distance_adj[nextidx] = distance + next_cost[i];
+				distance_adj[nextidx] = distance + next_cost;
 				route[nextidx] = move_p->GetSubwayStationName();		// 루트배열에 전 역 정보 저장
 				queue.push(make_pair(-distance_adj[nextidx], temp[i]));	// 다음 거리와 다음 역을 푸시한다.
 			}
@@ -118,10 +133,11 @@ bool SubwayMapManagement::Shortest_route(string start, string goal)
 				return true;
 			}
 
-			temp[i] = nullptr;
-			q[i] = nullptr;
-			next_cost[i] = INF;				// 조사가 끝나면 다시 inf로
+			next_cost = INF;				// 조사가 끝나면 다시 inf로
+			pre_q[i] = q[i];				// 전 역 pre에 저장
 		}
+
+		first = false;
 	}
 	
 	return false;

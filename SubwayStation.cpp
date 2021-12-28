@@ -55,27 +55,3 @@ void SubwayStation::Setadj(Edge* next, int pointer_num)
 {
 	this->adj[pointer_num] = next;
 }
-
-
-
-
-
-
-
-/*
- 
-void SubwayStation::SetMatrix(int source, int dest, int distance)
-{
-	distance_adj[source][dest] = distance;
-	distance_adj[dest][source] = distance;
-}
-
-
-
-void SubwayStation::SetMatrix(int source, int dest, int distance, bool Is_one_way)
-{
-	if (Is_one_way == true)
-		distance_adj[source][dest] = distance;
-}
-
-*/
