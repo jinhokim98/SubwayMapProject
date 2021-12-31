@@ -17,8 +17,8 @@ class Edge;
 class SubwayStation
 {
 private:
-	std::string stationName;
-	int edgenum;	// 해당역이 갈 수 있는 길의 수
+	std::string stationName;		// 역 이름
+	int edgenum;					// 해당역이 갈 수 있는 길의 수
 	Edge* adj[8];	// 한 역에 최대 지나가는 호선이 4개임으로 역마다 포인터를 최대 8개 준비한다.
 
 public:

@@ -22,6 +22,8 @@ SubwayStation::SubwayStation(string stationName, int edgenum)
 /*
  함수 이름 : GetSubwayStationName
  함수 기능 : 역 이름 반환
+ 인자 : 없음
+ 반환값 : 역 이름
 */
 string SubwayStation::GetSubwayStationName()
 {
@@ -31,6 +33,8 @@ string SubwayStation::GetSubwayStationName()
 /*
  함수 이름 : Getedgenum
  함수 기능 : 해당역이 갈 수 있는 길의 수를 반환한다.
+ 인자 : 없음
+ 반환값 : degree
 */
 int SubwayStation::Getedgenum()
 {
@@ -40,6 +44,8 @@ int SubwayStation::Getedgenum()
 /*
  함수 이름 : Getnext
  함수 기능 : 다음 엣지 반환
+ 인자 : int pointer_num 포인터 숫자 (enum에 기재되어있음)
+ 반환값 : 해당 엣지
 */
 Edge* SubwayStation::Getadj(int pointer_num)
 {
@@ -50,6 +56,8 @@ Edge* SubwayStation::Getadj(int pointer_num)
 /*
  함수 이름 : Setnext
  함수 기능 : 다음 역의 엣지 설정
+ 인자 : int pointer_num 포인터 숫자 (enum에 기재되어있음)
+ 반환값 : 없음
 */
 void SubwayStation::Setadj(Edge* next, int pointer_num)
 {

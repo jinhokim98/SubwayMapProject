@@ -1,51 +1,36 @@
 #include <iostream>
-#include "SubwayStation.h"
-#include "SubwayMapManagement.h"
-
-#define WELCOME_MESSAGE "수도권 지하철 노선도 프로그램"
-#define	INPUT_START "출발역을 입력하세요 : "
-#define INPUT_GOAL "도착역을 입력하세요 : "
-#define	SHOW_SHORTEST_ROUTE "최단시간루트는 다음과 같습니다. "
-
-void precautions();
+#include "SubwayMapUI.h"
 
 using namespace std;
 
+/*
+ 함수 이름 : main
+ 함수 기능 : 수도권 지하철 노선도 프로그램
+			 역 검색과 최단거리 시스템을 실행할 수 있다.
+ 인자 : 없음
+ 반환값 : 정상종료
+*/
 int main()
 {
-	SubwayMapManagement metro;
+	int menu;
 
-	//metro.print_degree();
+	SubwayMapUI SeoulMetro;			// UI 객체 생성
 
-	bool search;
-	string start;
-	string goal;
+	SeoulMetro.StartInterface();	// 인터페이스 실행
+	menu = SeoulMetro.SeleteMenu();	// 메뉴 선택
 
-	cout << WELCOME_MESSAGE << endl << endl;
-	precautions();
+	cout << endl;
 
-	cout << INPUT_START;
-	cin >> start;
-	cout << INPUT_GOAL;
-	cin >> goal;
+	switch (menu)
+	{
+	case 1:
+		SeoulMetro.StartSearchSystem();
+		break;
 
-	cout << endl << SHOW_SHORTEST_ROUTE << endl << endl;
-
-	search = metro.Shortest_route(start, goal);
-
-	if (search)
-		metro.print_path(start, goal);
-	else
-		cout << "실패" << endl;
-	
+	case 2:
+		SeoulMetro.StartShortestRouteSystem();
+		break;
+	}
 
 	return 0;
-}
-
-void precautions()
-{
-	cout << "주의사항" << endl;
-	cout << "동명이역구분 : 5호선 양평역은 '양평(5호선)' 경의중앙선 양평역은 '양평'으로 검색하세요 " << endl;
-	cout << "이수역과 총신대입구역은 같으나 역명이 다른관계로 이수역으로 통일하였습니다." << endl;
-	cout << "총신대입구역을 검색하려면 이수역으로 검색하세요. " << endl << endl;
 }

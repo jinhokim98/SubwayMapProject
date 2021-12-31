@@ -34,7 +34,9 @@ MakeGraph::MakeGraph()
 
 /*
  함수 이름 : initStation
- 함수 기능 : 역 객체 생성
+ 함수 기능 : 역 객체 생성 (txt파일로부터 역 정보를 읽어온다.)
+ 인자 : 없음
+ 반환값 : 없음
 */
 void MakeGraph::initStation()
 {
@@ -56,7 +58,9 @@ void MakeGraph::initStation()
 
 /*
  함수 이름 : initEdge
- 함수 기능 : 엣지 객체 생성
+ 함수 기능 : 엣지 객체 생성 (txt파일로부터 엣지 정보를 읽어온다.)
+ 인자 : 없음
+ 반환값 : 없음
 */
 void MakeGraph::initEdge()
 {
@@ -84,6 +88,8 @@ void MakeGraph::initEdge()
 /*
  함수 이름 : makeLine
  함수 기능 : 역 객체와 엣지 객체를 사용하여 호선을 이어준다.
+ 인자 : 없음
+ 반환값 : 없음
 */
 void MakeGraph::makeLine()
 {
@@ -438,6 +444,8 @@ void MakeGraph::makeLine()
 /*
  함수 이름 : link_first_station
  함수 기능 : 역이 첫번째 역이라면 전 역을 null로 처리하고 다음역을 가리킨다.
+ 인자 : int index (엣지의 인덱스)
+ 반환값 : 없음
 */
 void MakeGraph::link_first_station(int index)
 {
@@ -453,6 +461,8 @@ void MakeGraph::link_first_station(int index)
 /*
  함수 이름 : link_else_station
  함수 기능 : 역이 첫번째 마지막 역이 아니라면 전 역을 가리키고 다음역을 가리킨다.
+ 인자 : int index (엣지의 인덱스)
+ 반환값 : 없음
 */
 void MakeGraph::link_else_station(int index)
 {
@@ -468,6 +478,8 @@ void MakeGraph::link_else_station(int index)
 /*
  함수 이름 : link_last_station
  함수 기능 : 역이 마지막 역이라면 다음 역을 null로 처리한다.
+ 인자 : int index (엣지의 인덱스)
+ 반환값 : 없음
 */
 void MakeGraph::link_last_station(int index)
 {
@@ -485,6 +497,10 @@ void MakeGraph::link_last_station(int index)
  함수 기능 : 6호선의 단방향 문제를 해결해준다.
 			 응암이면 전 역인 새절과 이어주어야한다.
 			 응암이 아니면 전을 이어주지 않아야 한다.
+ 인자 : int index (엣지의 인덱스),
+		string name (역 이름)
+		bool Is_transfer_station (6호선 단방향 중 해당역이 환승역인지)
+ 반환값 : 없음
 */
 void MakeGraph::link_line6_one_way_problem(int index, string name, bool Is_transfer_station)
 {
@@ -621,8 +637,11 @@ int MakeGraph::check_next_station_case(int next_station_index)
 
 /*
  함수 이름 : Getdegree
- 함수 기능 : 각 역들의 degree를 조사하여 저장한다.
+ 함수 기능 : 각 역들의 degree를 조사하여 저장한다. (시험용)
 			 stationName의 환승역 degree값을 구하기 위해 사용하였다.
+ 인자 : SubwayStation** sub	 역 객체배열
+		Edge** edge			 엣지 객체배열
+ 반환값 : 없음
 */
 void MakeGraph::Getdegree(SubwayStation** sub, Edge** edge)
 {
@@ -731,21 +750,14 @@ void MakeGraph::Getdegree(SubwayStation** sub, Edge** edge)
 
 }
 
-Edge** MakeGraph::GetEdgePointer()
-{
-	return edge;
-}
-
-SubwayStation** MakeGraph::GetSubwayPointer()
-{
-	return station;
-}
 
 
 /*
  함수 이름 : SearchIndex
  함수 기능 : 역 이름을 찾아 인덱스를 반환
 			 지금은 순차검색이지만 나중에 이진검색으로 바꿀 것
+ 인자 : 역 이름
+ 반환값 : 역의 인덱스
 */
 int MakeGraph::SearchIndex(string name)
 {
@@ -762,6 +774,8 @@ int MakeGraph::SearchIndex(string name)
  함수 이름 : init
  함수 기능 : public 함수
 			 initStation(), initEdge(), makeLine()을 실행한다.
+ 인자 : 없음
+ 반환값 : 없음
 */
 void MakeGraph::init()
 {
@@ -770,7 +784,12 @@ void MakeGraph::init()
 	makeLine();
 }
 
-
+/*
+ 함수 이름 : GetStation
+ 함수 기능 : 역 이름을 입력받고 해당 역의 객체를 반환한다.
+ 인자 : string station_name  역 이름
+ 반환값 : 역 객체
+*/
 SubwayStation* MakeGraph::GetStation(string station_name)
 {
 	int index = SearchIndex(station_name);
@@ -778,20 +797,34 @@ SubwayStation* MakeGraph::GetStation(string station_name)
 }
 
 
-SubwayStation* MakeGraph::GetStation(Edge* q)
-{
-	if (q == nullptr)
-		return nullptr;
-
-	return q->Getnext();
-}
-
+/*
+ 함수 이름 : GetStation (함수 오버로딩)
+ 함수 기능 : 엣지를 입력받아서 다음 역을 알아낸다.
+ 인자 : Edge* q  역 사이를 잇는 엣지
+ 반환값 : 다음 역
+*/
 Edge* MakeGraph::GetEdge(SubwayStation* p, int pointer_num)
 {
 	if (p == nullptr)
 		return nullptr;
 
 	return p->Getadj(pointer_num);
+}
+
+/*
+ 시험용 함수
+*/
+Edge** MakeGraph::GetEdgePointer()
+{
+	return edge;
+}
+
+/*
+ 시험용 함수
+*/
+SubwayStation** MakeGraph::GetSubwayPointer()
+{
+	return station;
 }
 
 /*
@@ -805,3 +838,21 @@ MakeGraph::~MakeGraph()
 	for (int i = 0;i < EDGE_NUMBER;i++)
 		delete edge[i];
 }
+
+
+
+/*
+ 함수 이름 : GetStation (함수 오버로딩)
+ 함수 기능 : 엣지를 입력받아서 다음 역을 알아낸다.
+ 인자 : Edge* q  역 사이를 잇는 엣지
+ 반환값 : 다음 역
+*/
+/*
+SubwayStation* MakeGraph::GetStation(Edge* q)
+{
+	if (q == nullptr)
+		return nullptr;
+
+	return q->Getnext();
+}
+*/

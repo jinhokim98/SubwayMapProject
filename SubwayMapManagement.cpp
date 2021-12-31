@@ -7,12 +7,11 @@ using namespace std;
 /*
  생성자 : metro 객체를 동적생성하고 지하철 노선도를 만든다.
 */
-SubwayMapManagement::SubwayMapManagement() : route(), short_route()
+SubwayMapManagement::SubwayMapManagement() : short_route()
 {
 	metro = new MakeGraph;
 	metro->init();
 
-	transfer = 0;
 	route_index = 0;
 	
 	for (int i = 0;i < STATION_NUMBER;i++)
@@ -21,35 +20,29 @@ SubwayMapManagement::SubwayMapManagement() : route(), short_route()
 	}
 }
 
-void SubwayMapManagement::print_degree()
+/*
+ 함수 이름 : CheckStationName
+ 함수 기능 : UI로부터 받은 역 이름이 존재하는지 확인
+ 인자 : string station 역 이름
+ 반환값 : true or false
+*/
+bool SubwayMapManagement::CheckStationName(string station)
 {
-	Edge** pedge = metro->GetEdgePointer();
-	SubwayStation** psub = metro->GetSubwayPointer();
+	int request = metro->SearchIndex(station);
 
-	metro->Getdegree(psub, pedge);
+	if (request == -1)
+		return false;
+	else
+		return true;
 }
 
-void SubwayMapManagement::print_map()
-{
-	SubwayStation* p = metro->GetStation("논현");
-	Edge* q = nullptr;
-
-	while (p->GetSubwayStationName() != "장암")
-	{
-		cout << p->GetSubwayStationName() << ", ";
-
-		q = p->Getadj(trans0_next);
-		
-		if (q == nullptr)
-			break;
-
-		cout << q->GetSubwayLine() << ", ";
-		cout << q->Getdistance() << ", " << endl;
-
-		p = q->Getnext();
-	}
-}
-
+/*
+ 함수 이름 : Shortest_route
+ 함수 기능 : 출발역과 도착역의 최단 거리와 루트를 계산한다.
+ 인자 : string start : 출발역
+		string goal  : 도착역
+ 반환값 : true or false : 성공시 print_path 실행, 실패시 프로그램 종료
+*/
 bool SubwayMapManagement::Shortest_route(string start, string goal)
 {
 	int i = 0;
@@ -64,32 +57,35 @@ bool SubwayMapManagement::Shortest_route(string start, string goal)
 		exit(100);
 	}
 
-	priority_queue<pair<int, SubwayStation*>> queue;	// 우선순위 큐 사용
-	SubwayStation* p = metro->GetStation(start);		// 출발역을 p에 담는다.
-	SubwayStation* move_p;
+	priority_queue<tuple<int, Edge*, SubwayStation*>> queue;	// 전 엣지까지 담는 우선순위 큐
+
+	SubwayStation* p = metro->GetStation(start);				// 출발역을 p에 담는다.
 	SubwayStation* temp[8];	// 역의 최대 degree가 8이므로
 	Edge* q[8];				// 역에 이어진 엣지를 담을 변수
-	Edge* pre_q[8];			// 전의 역의 엣지정보 저장 (환승여부확인)
+	
+	string pre_linenum;		// 전 엣지의 호선정보
+	SubwayStation* preStation = nullptr;
+
 	bool first = true;		// 첫번째이면 환승하지 않는다.
 
-	for (i = 0;i < 8;i++)
-		pre_q[i] = nullptr;
-
-	queue.push(make_pair(0, p));
-
+	queue.push(make_tuple(0, nullptr, p));
 	distance_adj[start_index] = 0;					// 출발역에서 출발역은 0분
-	route[start_index] = p->GetSubwayStationName();	// 출발역 표시
+	route[start_index] = make_pair(p->GetSubwayStationName(), " ");	// 출발역 표시, 엣지는 아직 이동하지 않았음으로 공백
 
 	while (queue.empty() != true) 
 	{
-		int distance = -queue.top().first;			// 큐의 탑에 있는 역까지의 거리 저장
-		move_p = queue.top().second;			    // 큐의 탑에 있는 역 저장
+		int distance = -get<0>(queue.top());			// 큐의 탑에 있는 역까지의 거리 저장
+		Edge* pre_edge = get<1>(queue.top());			// 역의 전 엣지
+		SubwayStation* move_p = get<2>(queue.top());	// 큐의 탑에 있는 역 저장
 		queue.pop();
+
+		if (first != true)
+			preStation = FindPreStation(move_p, pre_edge);	// 팝해서 나온 역의 전 역을 구한다.
 		
-		for (i = 0; i < 8;i++)
+		for (i = 0; i < 8;i++)							// 전 역을 현재 역으로 최신화
 			temp[i] = move_p;
 						
-		for (i = 0;i < 8;i++) // 해당 역에서 갈 수 있는 모든 역을 탐색
+		for (i = 0;i < 8;i++)			// 해당 역에서 갈 수 있는 모든 역을 탐색
 		{
 			q[i] = temp[i]->Getadj(i);
 
@@ -98,15 +94,12 @@ bool SubwayMapManagement::Shortest_route(string start, string goal)
 
 			if (first != true)
 			{
-				if (pre_q[i] != nullptr)
-				{
-					if (pre_q[i]->GetSubwayLine() == q[i]->GetSubwayLine()) // 전 엣지의 호선과 현 엣지의 호선이 같다면
-						next_cost = q[i]->Getdistance();		// 다음역까지의 거리를 저장해둔다.
-					else
-						next_cost = q[i]->Getdistance() + 3;	// 환승시 3분 추가
-				}
+				if (pre_edge->GetSubwayLine() == q[i]->GetSubwayLine()) // 전 엣지의 호선과 현 엣지의 호선이 같다면
+					next_cost = q[i]->Getdistance();		// 다음역까지의 거리를 저장해둔다.
+				else
+					next_cost = q[i]->Getdistance() + 3;	// 환승시 3분 추가
 			}
-			else // 첫번째 시도일 경우 환승이 아니기 때문에 환승여부를 생각하지 않고 거리만 추가
+			else	// 첫번째 시도일 경우 환승이 아니기 때문에 환승여부를 생각하지 않고 거리만 추가
 			{
 				next_cost = q[i]->Getdistance();
 			}
@@ -124,25 +117,51 @@ bool SubwayMapManagement::Shortest_route(string start, string goal)
 			if (distance_adj[nextidx] > distance + next_cost)
 			{
 				distance_adj[nextidx] = distance + next_cost;
-				route[nextidx] = move_p->GetSubwayStationName();		// 루트배열에 전 역 정보 저장
-				queue.push(make_pair(-distance_adj[nextidx], temp[i]));	// 다음 거리와 다음 역을 푸시한다.
-			}
-
-			if (temp[i]->GetSubwayStationName() == goal)
-			{
-				return true;
+				route[nextidx].first = move_p->GetSubwayStationName();		// 루트배열에 전 역 정보 저장
+				route[nextidx].second = q[i]->GetSubwayLine();				// 다음 엣지의 호선정보 저장
+				queue.push(make_tuple(-distance_adj[nextidx], q[i], temp[i]));	// 다음 거리와 다음 역을 푸시한다.
 			}
 
 			next_cost = INF;				// 조사가 끝나면 다시 inf로
-			pre_q[i] = q[i];				// 전 역 pre에 저장
 		}
 
-		first = false;
+		first = false;						// 처음이 아니면 환승의 여지가 있으므로 바꿔준다.
 	}
 	
-	return false;
+	if (distance_adj[goal_index] != INF)	// 거리 배열이 무한대가 아니면 최단루트 검색 성공
+		return true;
+	else
+		return false;
 }
 
+/*
+ 함수 이름 : FindPreStation
+ 함수 기능 : 팝에서 나온 역의 전 역을 구한다. 
+ 인자 : SubwayStation* move_p : 큐에서 팝한 역: 현재 역
+		Edge* pre_edge		  : 큐에서 팝한 전 엣지
+ 반환값 : 전 역
+ */
+SubwayStation* SubwayMapManagement::FindPreStation(SubwayStation* move_p, Edge* pre_edge)
+{
+	Edge* q = pre_edge;
+	SubwayStation* p = nullptr;
+
+	if (q->Getnext() == move_p) // q의 다음이 팝한 역과 같다면 q의 전을 반환
+		p = q->Getpre();
+	else if (q->Getpre() == move_p) // q의 전이 팝한 역과 같다면 q의 다음을 반환
+		p = q->Getnext();
+	
+	return p;
+
+}
+
+/*
+ 함수 이름 : print_path
+ 함수 기능 : 최단경로를 출력한다.
+ 인자 : string start : 출발역
+		string goal  : 도착역
+ 반환값 : 없음
+ */
 void SubwayMapManagement::print_path(string start, string goal)
 {
 	int start_idx = metro->SearchIndex(start);
@@ -150,12 +169,17 @@ void SubwayMapManagement::print_path(string start, string goal)
 	
 	int index = goal_idx;
 
-	short_route[route_index++] = goal;	// 도착역 루트에 저장
+	int transfer = 0;
+	
 
-	while (route[index] != start)
+	short_route[route_index] = goal;	// 도착역 루트에 저장
+	line_info[route_index++] = " ";		// 루트 추적을 도착역부터 시작하므로 엣지 이동이 없다.
+
+	while (route[index].first != start)
 	{
-		short_route[route_index++] = route[index];
-		index = metro->SearchIndex(route[index]);
+		short_route[route_index] = route[index].first;
+		line_info[route_index++] = route[index].second;
+		index = metro->SearchIndex(route[index].first);
 	}
 
 	int i = route_index - 1;
@@ -169,7 +193,32 @@ void SubwayMapManagement::print_path(string start, string goal)
 	}
 
 	cout << endl;
-	cout << distance_adj[goal_idx] << "분" << endl;
+	cout << start << "역과 " << goal << "역 사이의 최단거리는 ";
+	cout << distance_adj[goal_idx] << "분 입니다." << endl;
+
+	for (i = 1; i < route_index - 2; i++)	//  첫 번째 배열의 값은 " " 이므로 제외
+	{
+		int j = i + 1;
+
+		if (line_info[i] != line_info[j])
+			transfer++;
+	}
+
+	cout << "총 환승횟수는 " << transfer << "회 입니다." << endl;
+}
+
+/*
+ 함수 이름 : print_degree (시험용)
+ 함수 기능 : 각 역의 degree를 알고 싶어서 사용했다.(메뉴에 구현하지 않음)
+ 인자 : 없음
+ 반환값 : 없음
+*/
+void SubwayMapManagement::print_degree()
+{
+	Edge** pedge = metro->GetEdgePointer();
+	SubwayStation** psub = metro->GetSubwayPointer();
+
+	metro->Getdegree(psub, pedge);
 }
 
 

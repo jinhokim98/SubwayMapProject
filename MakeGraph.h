@@ -9,7 +9,7 @@ enum location
 	lastcase
 };
 
-#define EDGE_NUMBER 723
+#define EDGE_NUMBER 724
 
 /*
  클래스 이름 : makeGraph
@@ -40,13 +40,12 @@ public:
 	MakeGraph();
 	void init();
 
-	//시험용
+	//시험용 : 아래의 세개의 함수는 각 역의 degree를 알기위해 사용했다.
 	void Getdegree(SubwayStation** sub, Edge** edge);
 	Edge** GetEdgePointer();
 	SubwayStation** GetSubwayPointer();
 
 	SubwayStation* GetStation(std::string station_name);
-	SubwayStation* GetStation(Edge* q);
 
 	Edge* GetEdge(SubwayStation* p, int pointer_num);
 
@@ -54,3 +53,4 @@ public:
 	
 	~MakeGraph();
 };
+
