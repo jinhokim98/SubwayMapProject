@@ -24,7 +24,7 @@ private:
 	SubwayStation* FindPreStation(SubwayStation* move_p, Edge* pre_edge);
 public:
 	SubwayMapManagement();
-	void print_degree();
+	void print_degree();	// ½ÃÇè¿ë
 	bool CheckStationName(std::string station);
 	bool Shortest_route(std::string start, std::string goal);
 	void print_path(std::string start, std::string goal);

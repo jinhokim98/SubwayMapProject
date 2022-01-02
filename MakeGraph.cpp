@@ -796,21 +796,6 @@ SubwayStation* MakeGraph::GetStation(string station_name)
 	return station[index];
 }
 
-
-/*
- 함수 이름 : GetStation (함수 오버로딩)
- 함수 기능 : 엣지를 입력받아서 다음 역을 알아낸다.
- 인자 : Edge* q  역 사이를 잇는 엣지
- 반환값 : 다음 역
-*/
-Edge* MakeGraph::GetEdge(SubwayStation* p, int pointer_num)
-{
-	if (p == nullptr)
-		return nullptr;
-
-	return p->Getadj(pointer_num);
-}
-
 /*
  시험용 함수
 */
@@ -838,21 +823,3 @@ MakeGraph::~MakeGraph()
 	for (int i = 0;i < EDGE_NUMBER;i++)
 		delete edge[i];
 }
-
-
-
-/*
- 함수 이름 : GetStation (함수 오버로딩)
- 함수 기능 : 엣지를 입력받아서 다음 역을 알아낸다.
- 인자 : Edge* q  역 사이를 잇는 엣지
- 반환값 : 다음 역
-*/
-/*
-SubwayStation* MakeGraph::GetStation(Edge* q)
-{
-	if (q == nullptr)
-		return nullptr;
-
-	return q->Getnext();
-}
-*/

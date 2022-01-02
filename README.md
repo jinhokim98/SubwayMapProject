@@ -40,9 +40,12 @@
 
 
 ## Communication diagram
+![diagram1](./img/diagram1.png)
+![diagram2](./img/diagram2.png)
+![diagram3](./img/diagram3.png)
 
 ## Class definition
-
+![definition](./img/definition.png)
 
 ## 주석 양식  
 1. 클래스 주석  
@@ -51,6 +54,7 @@
 /*
  클래스 이름 :
  클래스 기능 : 
+ */
 ```
 
 2. 함수 주석  
@@ -61,6 +65,7 @@
  함수 기능 :
  인자 : 
  반환값 : 
+ */
 ```
 
 **고민한 점**  

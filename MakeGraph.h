@@ -47,8 +47,6 @@ public:
 
 	SubwayStation* GetStation(std::string station_name);
 
-	Edge* GetEdge(SubwayStation* p, int pointer_num);
-
 	int SearchIndex(std::string name);
 	
 	~MakeGraph();
