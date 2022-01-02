@@ -54,7 +54,7 @@ void SubwayMapUI::print_menu()
 
 /*
  함수 이름 : Seletemenu
- 함수 기능 : 메뉴를 선택한다. 1번과 2번이 아닌 것을 골랐을 때는 무한 반복한다.
+ 함수 기능 : 메뉴를 선택한다. 1번과 2번이 아닌 것을 골랐을 때는 다시 선택하기
  인자 : 없음
  반환값 : 메뉴번호
 */
@@ -70,7 +70,7 @@ int SubwayMapUI::SeleteMenu()
 		if (menu == 1 || menu == 2)
 			break;
 		else
-			cout << ERROR_MESSAGE_MENU << endl;
+			cout << ERROR_MESSAGE_MENU << endl << endl;
 	}
 	
 	return menu;
