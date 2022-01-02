@@ -469,7 +469,8 @@ line_Incheon2	왕길	검단사거리	3
 line_Incheon2	검단사거리	마전	2
 line_Incheon2	마전	완정	1
 line_Incheon2	완정	독정	2
-line_Incheon2	독정	검바위	4
+line_Incheon2	독정	검암	2
+line_Incheon2	검암	검바위	1
 line_Incheon2	검바위	아시아드경기장	2
 line_Incheon2	아시아드경기장	서구청	1
 line_Incheon2	서구청	가정	3
