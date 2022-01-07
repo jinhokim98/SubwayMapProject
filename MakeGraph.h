@@ -2,6 +2,7 @@
 #include "SubwayStation.h"
 #include "Edge.h"
 
+
 enum location
 {
 	firstcase,
@@ -21,6 +22,7 @@ private:
 
 	SubwayStation* station[STATION_NUMBER];		// 역 객체
 	Edge* edge[EDGE_NUMBER];					// 엣지 객체
+	std::string binary_station[STATION_NUMBER];	// 이진 검색을 위해 역 이름 저장
 
 	void initStation();
 	void initEdge();

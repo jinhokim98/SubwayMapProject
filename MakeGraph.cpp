@@ -50,7 +50,8 @@ void MakeGraph::initStation()
 		stationinfo >> subwayname;
 		stationinfo >> edgenum;
 
-		station[index++] = new SubwayStation(subwayname, edgenum);	// 역 객체 배열 생성 (순서대로)
+		station[index] = new SubwayStation(subwayname, edgenum);	// 역 객체 배열 생성 (순서대로)
+		binary_station[index++] = subwayname;						// 이진 검색을 위해 역 이름 순서대로 저장
 	}
 
 	stationinfo.close();
@@ -751,24 +752,34 @@ void MakeGraph::Getdegree(SubwayStation** sub, Edge** edge)
 }
 
 
-
 /*
  함수 이름 : SearchIndex
- 함수 기능 : 역 이름을 찾아 인덱스를 반환
-			 지금은 순차검색이지만 나중에 이진검색으로 바꿀 것
+ 함수 기능 : 역 이름을 찾아 인덱스를 반환 (이진검색)
  인자 : 역 이름
  반환값 : 역의 인덱스
 */
 int MakeGraph::SearchIndex(string name)
 {
-	for (int index = 0; index < STATION_NUMBER; index++)
+	int l, r, m;
+	
+	l = 0;
+	r = STATION_NUMBER - 1;
+	
+	while (l <= r)
 	{
-		if (station[index]->GetSubwayStationName() == name)
-			return index;
+		m = (l + r) / 2;
+		
+		if (name.compare(binary_station[m]) < 0)		
+			r = m - 1;
+		else if (name.compare(binary_station[m]) > 0)
+			l = m + 1;
+		else
+			return m;
 	}
 
-	return -1;
+	return -1;		// 검색 실패
 }
+
 
 /*
  함수 이름 : init
